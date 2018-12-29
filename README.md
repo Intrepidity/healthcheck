@@ -16,8 +16,7 @@ A health check consists of an instance of `HealthService`, containing one or mor
 
 For example, we can initialize and execute a set of checks like so:
 
-```php
-<?php
+```$php
 $healthCheck = HealthService([
    new PdoCheck("dsn", "username", "password"),
    new HttpStatusCheck($httpClient, $requestFactory, new Uri("http://my-endpoint"), [200])
@@ -30,6 +29,8 @@ The report variable then contains an object with all the check results, plus som
 
 This library comes out of the box with a simple HTTP Status check and PDO connection check, other checks have to be implemented manually.
 
+This library heavily relies on PSR-7, PSR-17 and PSR-18 standards, so it is often assumed that you supply your own implementations of PSR interfaces, such as request- and response factories.  
+
 ## Recommendations
 
 ### Labels
@@ -39,7 +40,19 @@ For example, my main application could have a health check labelled `authenticat
 This way an almost automatic map of service health can be generated within your organization.
 
 ### Exposing health checks
-Health checks should be exposed on a URL so that external services and monitoring systems can access them. It is recommended however to keep the health endpoints exposed only inside of your network
+Health checks should be exposed on a URL so that external services and monitoring systems can access them. It is recommended however to keep the health endpoints exposed only inside of your network.
+
+The `ResponseFactory` class can be used to easily create a PSR-7 response for use in your health endpoints, like so:
+
+```$php
+$factory = new ResponseFactory(
+    $psrResponseFacory,
+    $streamFactory,
+    $healthService
+);
+
+$response = $factory->create();
+```
 
 ## Todo's
 The following features are still in progress 
