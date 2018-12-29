@@ -1,3 +1,5 @@
+Warning: This is a library in development, and probably not production ready. Here still be some tiny dragons.
+
 # Health check
 In order to quickly diagnose problems in your applications it's important to be able to quickly distinguish between problems in the application itself, and it's dependencies.
 
@@ -28,7 +30,18 @@ The report variable then contains an object with all the test results, plus some
 This library comes out of the box with a simple URI HTTP status test, other tests have to be implemented manually.
 
 ## Recommendations
+
+### Labels
 The label property for each test should be reflective of the name of the application being tested.
 
 For example, my main application could have a health test labelled `authentication_api`, which can then lead to some montitoring system firing a query at that particular application to determine which of it's dependencies has become unhealthy, and so forth.
-This way an almost automatic map of service health can be generated within your organization. 
+This way an almost automatic map of service health can be generated within your organization.
+
+### Exposing health checks
+Health checks should be exposed on a URL so that external services and monitoring systems can access them. It is recommended however to keep the health endpoints exposed only inside of your network
+
+## Todo's
+The following features are still in progress 
+
+ - PSR middleware to expose health information
+ - More standard health tests
