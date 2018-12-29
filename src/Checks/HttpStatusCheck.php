@@ -3,15 +3,20 @@ declare(strict_types=1);
 
 namespace Intrepidity\Healthcheck\Checks;
 
-use Intrepidity\Healthcheck\HealthTestInterface;
-use Intrepidity\Healthcheck\HealthTestResult;
+use Intrepidity\Healthcheck\CheckInterface;
+use Intrepidity\Healthcheck\CheckResult;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
-class UriStatusTest implements HealthTestInterface
+class HttpStatusCheck implements CheckInterface
 {
+    /**
+     * @var string
+     */
+    private $label;
+
     /**
      * @var ClientInterface
      */
@@ -33,35 +38,30 @@ class UriStatusTest implements HealthTestInterface
     private $allowedStatuses;
 
     /**
-     * @var string
-     */
-    private $label;
-
-    /**
+     * @param string $label
      * @param ClientInterface $httpClient
      * @param RequestFactoryInterface $requestFactory
      * @param UriInterface $uri
      * @param array $allowedStatuses
-     * @param string $label
      */
     public function __construct(
+        string $label,
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
         UriInterface $uri,
-        array $allowedStatuses,
-        string $label
+        array $allowedStatuses
     ) {
+        $this->label = $label;
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
         $this->uri = $uri;
         $this->allowedStatuses = $allowedStatuses;
-        $this->label = $label;
     }
 
     /**
-     * @return HealthTestResult
+     * @return CheckResult
      */
-    public function performTest(): HealthTestResult
+    public function performTest(): CheckResult
     {
         $startTime = microtime(true);
 
@@ -79,11 +79,13 @@ class UriStatusTest implements HealthTestInterface
         {
             $success = false;
         }
-
-        return new HealthTestResult(
-            $this->label,
-            $success ?? false,
-            (microtime(true) - $startTime)
-        );
+        finally
+        {
+            return new CheckResult(
+                $this->label,
+                $success ?? false,
+                (microtime(true) - $startTime)
+            );
+        }
     }
 }

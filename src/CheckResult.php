@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Intrepidity\Healthcheck;
 
-class HealthTestResult
+class CheckResult
 {
     /**
      * @var string

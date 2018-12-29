@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Intrepidity\Healthcheck\Checks;
 
-use Intrepidity\Healthcheck\HealthTestInterface;
-use Intrepidity\Healthcheck\HealthTestResult;
-use Intrepidity\Healthcheck\TestException;
+use Intrepidity\Healthcheck\CheckInterface;
+use Intrepidity\Healthcheck\CheckResult;
 
-class MySQLTest implements HealthTestInterface
+class PdoCheck implements CheckInterface
 {
     /**
      * @var string
@@ -17,12 +16,7 @@ class MySQLTest implements HealthTestInterface
     /**
      * @var string
      */
-    private $hostname;
-
-    /**
-     * @var int
-     */
-    private $port;
+    private $dsn;
 
     /**
      * @var string
@@ -40,29 +34,23 @@ class MySQLTest implements HealthTestInterface
     private $connectionFactory;
 
     /**
-     * @param string $hostname
+     * @param string $label
+     * @param string $dsn
      * @param string $username
      * @param string $password
-     * @param int $port
      * @param callable|null $connectionFactory
-     * @throws TestException
      */
-    public function __construct(string $label, string $hostname, string $username, string $password, int $port = 3306, ?callable $connectionFactory = null)
+    public function __construct(string $label, string $dsn, string $username, string $password, ?callable $connectionFactory = null)
     {
-        if (!in_array('mysql', \PDO::getAvailableDrivers())) {
-            throw new TestException("PDO MySQL driver is required for this test");
-        }
-
         $this->label = $label;
-        $this->hostname = $hostname;
-        $this->port = $port;
+        $this->dsn = $dsn;
         $this->username = $username;
         $this->password = $password;
 
         if ($connectionFactory === null) {
             $this->connectionFactory = function() {
                 return new \PDO(
-                    "mysql:host={$this->hostname};port={$this->port}",
+                    $this->dsn,
                     $this->username,
                     $this->password,
                     [
@@ -76,9 +64,9 @@ class MySQLTest implements HealthTestInterface
     }
 
     /**
-     * @return HealthTestResult
+     * @return CheckResult
      */
-    public function performTest(): HealthTestResult
+    public function performTest(): CheckResult
     {
         $startTime = microtime(true);
 
@@ -94,7 +82,7 @@ class MySQLTest implements HealthTestInterface
         }
         finally
         {
-            return new HealthTestResult(
+            return new CheckResult(
                 $this->label,
                 $success,
                 microtime(true) - $startTime

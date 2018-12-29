@@ -1,22 +1,21 @@
 <?php
 namespace Intrepidity\Healthcheck\Tests\Checks;
 
-use Intrepidity\Healthcheck\Checks\MySQLTest;
+use Intrepidity\Healthcheck\Checks\PdoCheck;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class MySQLTestTest extends TestCase
+class PdoCheckTest extends TestCase
 {
     public function testSuccessReturnsSuccess()
     {
         $pdoMock = $this->getPdoMock(false);
 
-        $test = new MySQLTest(
+        $test = new PdoCheck(
             "mysql",
-            "some-non-existant-host",
+            "mysql:some-non-existant-host;port=3306",
             "root",
             "root",
-            3306,
             function() use ($pdoMock) {
                 return $pdoMock;
             }
@@ -32,12 +31,11 @@ class MySQLTestTest extends TestCase
     {
         $pdoMock = $this->getPdoMock(true);
 
-        $test = new MySQLTest(
+        $test = new PdoCheck(
             "mysql",
-            "some-non-existant-host",
+            "mysql:some-non-existant-host;port=3306",
             "root",
             "root",
-            3306,
             function() use ($pdoMock) {
                 return $pdoMock;
             }

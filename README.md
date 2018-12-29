@@ -16,10 +16,9 @@ For example, we can initialize and execute a set of tests like so:
 
 ```php
 <?php
-$healthCheck = HealthCheck([
-   new MySQLTest(),
-   new RedisTest(),
-   new SomeOtherTest()
+$healthCheck = HealthService([
+   new PdoCheck("dsn", "username", "password"),
+   new HttpStatusCheck($httpClient, $requestFactory, new Uri("http://my-endpoint"), [200])
 ]);
 
 $report = $healthCheck->performAll();

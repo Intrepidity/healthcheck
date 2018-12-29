@@ -1,8 +1,7 @@
 <?php
 namespace Intrepidity\Healthcheck\Tests\Checks;
 
-use Intrepidity\Healthcheck\Checks\UriStatusTest;
-use Intrepidity\Healthcheck\Checks\UriStatusTestFactory;
+use Intrepidity\Healthcheck\Checks\HttpStatusCheckFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Client\ClientInterface;
@@ -12,22 +11,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 
-class UriStatusTestTest extends TestCase
+class HttpStatusCheckTest extends TestCase
 {
     public function testAllowedStatusReturnsSuccess()
     {
-        $factory = new UriStatusTestFactory(
+        $factory = new HttpStatusCheckFactory(
             $this->getClientInterfaceMock(200),
             $this->getRequestFactoryMock()
         );
 
         $test = $factory->create(
+            "authentication_api",
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
                 201
-            ],
-            "authentication_api"
+            ]
         );
 
         $result = $test->performTest();
@@ -39,18 +38,18 @@ class UriStatusTestTest extends TestCase
 
     public function testNonAllowedStatusReturnsFailure()
     {
-        $factory = new UriStatusTestFactory(
+        $factory = new HttpStatusCheckFactory(
             $this->getClientInterfaceMock(500),
             $this->getRequestFactoryMock()
         );
 
         $test = $factory->create(
+            "authentication_api",
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
                 201
-            ],
-            "authentication_api"
+            ]
         );
 
         $result = $test->performTest();
@@ -62,18 +61,18 @@ class UriStatusTestTest extends TestCase
 
     public function testHttpExceptionReturnsFailure()
     {
-        $factory = new UriStatusTestFactory(
+        $factory = new HttpStatusCheckFactory(
             $this->getClientInterfaceMock(200, true),
             $this->getRequestFactoryMock()
         );
 
         $test = $factory->create(
+            "authentication_api",
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
                 201
-            ],
-            "authentication_api"
+            ]
         );
 
         $result = $test->performTest();

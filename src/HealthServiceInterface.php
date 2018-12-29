@@ -1,14 +1,14 @@
 <?php
 namespace Intrepidity\Healthcheck;
 
-interface HealthCheckInterface
+interface HealthServiceInterface
 {
     /**
      * Add a test to the check
-     * @param HealthTestInterface $test
-     * @return HealthCheckInterface Reference to self for method chaining
+     * @param CheckInterface $test
+     * @return HealthServiceInterface Reference to self for method chaining
      */
-    public function addTest(HealthTestInterface $test): HealthCheckInterface;
+    public function addTest(CheckInterface $test): HealthServiceInterface;
 
     /**
      * Perform all tests in the current check

@@ -8,7 +8,7 @@ use JsonSerializable;
 class HealthReport implements JsonSerializable
 {
     /**
-     * @var HealthTestResult[]
+     * @var CheckResult[]
      */
     protected $testResults;
 
@@ -17,7 +17,7 @@ class HealthReport implements JsonSerializable
      */
     public function __construct(array $testResults)
     {
-        array_walk($testResults, function(HealthTestResult $result) {
+        array_walk($testResults, function(CheckResult $result) {
             $this->testResults[] = $result;
         });
     }
@@ -66,7 +66,7 @@ class HealthReport implements JsonSerializable
     }
 
     /**
-     * @return HealthTestResult[]
+     * @return CheckResult[]
      */
     public function getTestResults(): array
     {

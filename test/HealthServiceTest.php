@@ -1,13 +1,13 @@
 <?php
 namespace Intrepidity\Healthcheck\Tests;
 
-use Intrepidity\Healthcheck\HealthCheck;
+use Intrepidity\Healthcheck\HealthService;
 use Intrepidity\Healthcheck\HealthReport;
-use Intrepidity\Healthcheck\HealthTestInterface;
-use Intrepidity\Healthcheck\HealthTestResult;
+use Intrepidity\Healthcheck\CheckInterface;
+use Intrepidity\Healthcheck\CheckResult;
 use PHPUnit\Framework\TestCase;
 
-class HealthCheckTest extends TestCase
+class HealthServiceTest extends TestCase
 {
     /**
      * @expectedException \TypeError
@@ -15,18 +15,18 @@ class HealthCheckTest extends TestCase
     public function testConstructThrowsTypeErrorWhenNonTestIsPassed()
     {
         $tests = [
-            $this->prophesize(HealthReport::class)->reveal(),       // Invalid object
-            $this->prophesize(HealthTestInterface::class)->reveal() // Valid object
+            $this->prophesize(HealthReport::class)->reveal(),  // Invalid object
+            $this->prophesize(CheckInterface::class)->reveal() // Valid object
         ];
 
-        new HealthCheck($tests);
+        new HealthService($tests);
     }
 
     public function testPerformAllReturnsReport()
     {
-        $testMock = $this->prophesize(HealthTestInterface::class);
+        $testMock = $this->prophesize(CheckInterface::class);
         $testMock->performTest()->willReturn(
-            $this->prophesize(HealthTestResult::class)->reveal()
+            $this->prophesize(CheckResult::class)->reveal()
         );
 
         $tests = [
@@ -34,7 +34,7 @@ class HealthCheckTest extends TestCase
             $testMock->reveal()
         ];
 
-        $check = new HealthCheck($tests);
+        $check = new HealthService($tests);
 
         $report = $check->performAll();
 

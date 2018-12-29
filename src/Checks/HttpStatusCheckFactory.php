@@ -7,7 +7,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
-class UriStatusTestFactory
+class HttpStatusCheckFactory
 {
     /**
      * @var ClientInterface
@@ -30,19 +30,19 @@ class UriStatusTestFactory
     }
 
     /**
+     * @param string $label
      * @param UriInterface $uri
      * @param array $allowedStatuses
-     * @param string $label
-     * @return UriStatusTest
+     * @return HttpStatusCheck
      */
-    public function create(UriInterface $uri, array $allowedStatuses, string $label): UriStatusTest
+    public function create(string $label, UriInterface $uri, array $allowedStatuses): HttpStatusCheck
     {
-        return new UriStatusTest(
+        return new HttpStatusCheck(
+            $label,
             $this->httpClient,
             $this->requestFactory,
             $uri,
-            $allowedStatuses,
-            $label
+            $allowedStatuses
         );
     }
 }
