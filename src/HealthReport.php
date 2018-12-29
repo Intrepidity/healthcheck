@@ -38,19 +38,29 @@ class HealthReport implements JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function hasOneOrMoreFailedChecks(): bool
+    {
+        foreach ($this->getCheckResults() as $checkResult)
+        {
+            if ($checkResult->isSuccess() === false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
         $checks = [];
-        $healthy = true;
 
         foreach ($this->checkResults as $result)
         {
-            if (!$result->isSuccess()) {
-                $healthy = false;
-            }
-
             $checks[] = [
                 'label' => $result->getLabel(),
                 'success' => $result->isSuccess(),
@@ -60,7 +70,7 @@ class HealthReport implements JsonSerializable
 
         return [
             'totalDuration' => $this->getTotalDuration(),
-            'healthy' => $healthy,
+            'healthy' => $this->hasOneOrMoreFailedChecks() ? false : true,
             'checks' => $checks
         ];
     }
