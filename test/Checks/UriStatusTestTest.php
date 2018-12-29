@@ -2,6 +2,7 @@
 namespace Intrepidity\Healthcheck\Tests\Checks;
 
 use Intrepidity\Healthcheck\Checks\UriStatusTest;
+use Intrepidity\Healthcheck\Checks\UriStatusTestFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Client\ClientInterface;
@@ -15,9 +16,12 @@ class UriStatusTestTest extends TestCase
 {
     public function testAllowedStatusReturnsSuccess()
     {
-        $test = new UriStatusTest(
+        $factory = new UriStatusTestFactory(
             $this->getClientInterfaceMock(200),
-            $this->getRequestFactoryMock(),
+            $this->getRequestFactoryMock()
+        );
+
+        $test = $factory->create(
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
@@ -35,9 +39,12 @@ class UriStatusTestTest extends TestCase
 
     public function testNonAllowedStatusReturnsFailure()
     {
-        $test = new UriStatusTest(
+        $factory = new UriStatusTestFactory(
             $this->getClientInterfaceMock(500),
-            $this->getRequestFactoryMock(),
+            $this->getRequestFactoryMock()
+        );
+
+        $test = $factory->create(
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
@@ -55,9 +62,12 @@ class UriStatusTestTest extends TestCase
 
     public function testHttpExceptionReturnsFailure()
     {
-        $test = new UriStatusTest(
+        $factory = new UriStatusTestFactory(
             $this->getClientInterfaceMock(200, true),
-            $this->getRequestFactoryMock(),
+            $this->getRequestFactoryMock()
+        );
+
+        $test = $factory->create(
             $this->prophesize(UriInterface::class)->reveal(),
             [
                 200,
