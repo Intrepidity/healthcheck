@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Intrepidity/healthcheck.svg?branch=master)](https://travis-ci.org/Intrepidity/healthcheck)
+
 Warning: This is a library in development, and probably not production ready. Here still be some tiny dragons.
 
 # Health check
