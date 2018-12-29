@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Intrepidity\Healthcheck;
 
-class HealthCheck
+class HealthCheck implements HealthCheckInterface
 {
     /**
      * @var HealthTestInterface[]
@@ -23,10 +23,13 @@ class HealthCheck
 
     /**
      * @param HealthTestInterface $test
+     * @return HealthCheckInterface
      */
-    public function addTest(HealthTestInterface $test)
+    public function addTest(HealthTestInterface $test): HealthCheckInterface
     {
         $this->tests[] = $test;
+
+        return $this;
     }
 
     /**
