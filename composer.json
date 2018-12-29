@@ -1,0 +1,32 @@
+{
+    "name": "intrepidity/healthcheck",
+    "type": "library",
+    "description": "Library to simplify writing health checks for external dependencies of your application",
+    "authors": [
+        {
+            "name": "Bart Guliker",
+            "email": "bart1987@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "ext-json": "*",
+        "roave/security-advisories": "dev-master",
+        "psr/http-message": "^1.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Intrepidity\\Healthcheck\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Intrepidity\\Healthcheck\\Tests\\": "./test"
+        }
+    }
+}
