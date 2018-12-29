@@ -25,7 +25,7 @@ class HealthServiceTest extends TestCase
     public function testPerformAllReturnsReport()
     {
         $testMock = $this->prophesize(CheckInterface::class);
-        $testMock->performTest()->willReturn(
+        $testMock->performCheck()->willReturn(
             $this->prophesize(CheckResult::class)->reveal()
         );
 
@@ -39,6 +39,6 @@ class HealthServiceTest extends TestCase
         $report = $check->performAll();
 
         $this->assertInstanceOf(HealthReport::class, $report);
-        $this->assertCount(2, $report->getTestResults());
+        $this->assertCount(2, $report->getCheckResults());
     }
 }

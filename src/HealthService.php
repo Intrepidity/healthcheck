@@ -8,26 +8,26 @@ class HealthService implements HealthServiceInterface
     /**
      * @var CheckInterface[]
      */
-    protected $tests;
+    protected $checks;
 
     /**
-     * @param array|null $tests
+     * @param array|null $checks
      */
-    public function __construct(array $tests = null)
+    public function __construct(array $checks = null)
     {
-        foreach ($tests as $test)
+        foreach ($checks as $check)
         {
-            $this->addTest($test);
+            $this->addCheck($check);
         }
     }
 
     /**
-     * @param CheckInterface $test
+     * @param CheckInterface $check
      * @return HealthServiceInterface
      */
-    public function addTest(CheckInterface $test): HealthServiceInterface
+    public function addCheck(CheckInterface $check): HealthServiceInterface
     {
-        $this->tests[] = $test;
+        $this->checks[] = $check;
 
         return $this;
     }
@@ -37,13 +37,13 @@ class HealthService implements HealthServiceInterface
      */
     public function performAll(): HealthReport
     {
-        $testResults = [];
+        $checkResults = [];
 
-        foreach ($this->tests as $test)
+        foreach ($this->checks as $check)
         {
-            $testResults[] = $test->performTest();
+            $checkResults[] = $check->performCheck();
         }
 
-        return new HealthReport($testResults);
+        return new HealthReport($checkResults);
     }
 }

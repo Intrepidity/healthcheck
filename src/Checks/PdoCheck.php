@@ -66,7 +66,7 @@ class PdoCheck implements CheckInterface
     /**
      * @return CheckResult
      */
-    public function performTest(): CheckResult
+    public function performCheck(): CheckResult
     {
         $startTime = microtime(true);
 

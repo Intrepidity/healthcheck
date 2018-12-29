@@ -10,15 +10,15 @@ class HealthReport implements JsonSerializable
     /**
      * @var CheckResult[]
      */
-    protected $testResults;
+    protected $checkResults;
 
     /**
-     * @param array $testResults
+     * @param array $checkResults
      */
-    public function __construct(array $testResults)
+    public function __construct(array $checkResults)
     {
-        array_walk($testResults, function(CheckResult $result) {
-            $this->testResults[] = $result;
+        array_walk($checkResults, function(CheckResult $result) {
+            $this->checkResults[] = $result;
         });
     }
 
@@ -29,9 +29,9 @@ class HealthReport implements JsonSerializable
     {
         $totalDuration = 0.0;
 
-        foreach ($this->testResults as $testResult)
+        foreach ($this->checkResults as $checkResult)
         {
-            $totalDuration += $testResult->getDuration();
+            $totalDuration += $checkResult->getDuration();
         }
 
         return $totalDuration;
@@ -42,16 +42,16 @@ class HealthReport implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        $results = [];
+        $checks = [];
         $healthy = true;
 
-        foreach ($this->testResults as $result)
+        foreach ($this->checkResults as $result)
         {
             if (!$result->isSuccess()) {
                 $healthy = false;
             }
 
-            $results[] = [
+            $checks[] = [
                 'label' => $result->getLabel(),
                 'success' => $result->isSuccess(),
                 'duration' => $result->getDuration()
@@ -61,15 +61,15 @@ class HealthReport implements JsonSerializable
         return [
             'totalDuration' => $this->getTotalDuration(),
             'healthy' => $healthy,
-            'results' => $results
+            'checks' => $checks
         ];
     }
 
     /**
      * @return CheckResult[]
      */
-    public function getTestResults(): array
+    public function getCheckResults(): array
     {
-        return $this->testResults;
+        return $this->checkResults;
     }
 }

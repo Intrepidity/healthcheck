@@ -5,5 +5,5 @@ namespace Intrepidity\Healthcheck;
 
 interface CheckInterface
 {
-    public function performTest(): CheckResult;
+    public function performCheck(): CheckResult;
 }

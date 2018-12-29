@@ -55,7 +55,7 @@ class HealthReportTest extends TestCase
         ]);
 
         $this->assertEquals([
-            'results' => [
+            'checks' => [
                 [
                     'label' => 'authentication_api',
                     'success' => true,

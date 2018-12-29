@@ -29,7 +29,7 @@ class HttpStatusCheckTest extends TestCase
             ]
         );
 
-        $result = $test->performTest();
+        $result = $test->performCheck();
 
         $this->assertTrue($result->isSuccess());
         $this->assertGreaterThan(0.0, $result->getDuration());
@@ -52,7 +52,7 @@ class HttpStatusCheckTest extends TestCase
             ]
         );
 
-        $result = $test->performTest();
+        $result = $test->performCheck();
 
         $this->assertFalse($result->isSuccess());
         $this->assertGreaterThan(0.0, $result->getDuration());
@@ -75,7 +75,7 @@ class HttpStatusCheckTest extends TestCase
             ]
         );
 
-        $result = $test->performTest();
+        $result = $test->performCheck();
 
         $this->assertFalse($result->isSuccess());
         $this->assertGreaterThan(0.0, $result->getDuration());
