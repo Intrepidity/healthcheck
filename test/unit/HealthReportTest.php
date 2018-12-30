@@ -1,5 +1,5 @@
 <?php
-namespace Intrepidity\Healthcheck\Tests;
+namespace Intrepidity\Healthcheck\UnitTests;
 
 use Intrepidity\Healthcheck\HealthReport;
 use Intrepidity\Healthcheck\CheckInterface;

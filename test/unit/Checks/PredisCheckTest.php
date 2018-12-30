@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Intrepidity\Healthcheck\Tests\Checks;
+namespace Intrepidity\Healthcheck\UnitTests\Checks;
 
 use Intrepidity\Healthcheck\Checks\PredisCheck;
 use PHPUnit\Framework\TestCase;

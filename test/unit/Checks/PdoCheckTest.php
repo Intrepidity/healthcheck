@@ -1,5 +1,5 @@
 <?php
-namespace Intrepidity\Healthcheck\Tests\Checks;
+namespace Intrepidity\Healthcheck\UnitTests\Checks;
 
 use Intrepidity\Healthcheck\Checks\PdoCheck;
 use PHPUnit\Framework\TestCase;
