@@ -3,22 +3,30 @@ declare(strict_types=1);
 
 namespace Intrepidity\Healthcheck;
 
+use Psr\Log\LoggerInterface;
+
 class HealthService implements HealthServiceInterface
 {
     /**
      * @var CheckInterface[]
      */
     protected $checks;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param array|null $checks
      */
-    public function __construct(array $checks = null)
+    public function __construct(array $checks = null, LoggerInterface $logger = null)
     {
         foreach ($checks as $check)
         {
             $this->addCheck($check);
         }
+
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -41,7 +49,18 @@ class HealthService implements HealthServiceInterface
 
         foreach ($this->checks as $check)
         {
-            $checkResults[] = $check->performCheck();
+            $result = $check->performCheck();
+
+            switch ($result->isSuccess()) {
+                case true:
+                    $this->logger->info("Health check '" . $result->getLabel() . "' is OK. Duration: " . round($result->getDuration(), 2) . "s.");
+                    break;
+                case false:
+                    $this->logger->alert("Health check '" . $result->getLabel() . "' has failed. Duration: " . round($result->getDuration(), 2) . "s.");
+                    break;
+            }
+
+            $checkResults[] = $result;
         }
 
         return new HealthReport($checkResults);
