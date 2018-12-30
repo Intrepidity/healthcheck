@@ -8,3 +8,7 @@ services:
   - 'mysql'
 before_script:
   - composer install --dev
+script:
+  - vendor/bin/phpunit --testsuite unit
+  - vendor/bin/phpunit --testsuite integration
+  - vendor/bin/psalm
