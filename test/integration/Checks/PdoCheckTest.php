@@ -22,4 +22,19 @@ class PdoCheckTest extends TestCase
         $this->assertTrue($result->isSuccess());
         $this->assertGreaterThan(0.0, $result->getDuration());
     }
+
+    public function testReturnsFailureIfConnectionFails()
+    {
+        $check = new PdoCheck(
+            "mysql",
+            "mysql:host=this-host-doesnt-exist;port=3306",
+            "root",
+            ""
+        );
+
+        $result = $check->performCheck();
+
+        $this->assertFalse($result->isSuccess());
+        $this->assertGreaterThan(0.0, $result->getDuration());
+    }
 }

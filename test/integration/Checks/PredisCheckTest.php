@@ -25,4 +25,22 @@ class PredisCheckTest extends TestCase
         $this->assertTrue($result->isSuccess());
         $this->assertGreaterThan(0.0, $result->getDuration());
     }
+
+    public function testReturnsFailureIfConnectionFails()
+    {
+        $check = new PredisCheck(
+            "redis",
+            [
+                "scheme" => "tcp",
+                "host" => "this-host-doesnt-exist",
+                "port" => 6379
+            ],
+            []
+        );
+
+        $result = $check->performCheck();
+
+        $this->assertFalse($result->isSuccess());
+        $this->assertGreaterThan(0.0, $result->getDuration());
+    }
 }

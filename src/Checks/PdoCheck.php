@@ -29,38 +29,18 @@ class PdoCheck implements CheckInterface
     private $password;
 
     /**
-     * @var callable
-     */
-    private $connectionFactory;
-
-    /**
      * @param string $label
      * @param string $dsn
      * @param string $username
      * @param string $password
      * @param callable|null $connectionFactory
      */
-    public function __construct(string $label, string $dsn, string $username, string $password, ?callable $connectionFactory = null)
+    public function __construct(string $label, string $dsn, string $username, string $password)
     {
         $this->label = $label;
         $this->dsn = $dsn;
         $this->username = $username;
         $this->password = $password;
-
-        if ($connectionFactory === null) {
-            $this->connectionFactory = function() {
-                return new \PDO(
-                    $this->dsn,
-                    $this->username,
-                    $this->password,
-                    [
-                        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-                    ]
-                );
-            };
-        } else {
-            $this->connectionFactory = $connectionFactory;
-        }
     }
 
     /**
@@ -71,8 +51,14 @@ class PdoCheck implements CheckInterface
         $startTime = microtime(true);
 
         try {
-            /** @var \PDO $connection */
-            $connection = call_user_func($this->connectionFactory);
+            $connection = new \PDO(
+                $this->dsn,
+                $this->username,
+                $this->password,
+                [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                ]
+            );
             $connection->query("SELECT 1");
 
             $success = true;
