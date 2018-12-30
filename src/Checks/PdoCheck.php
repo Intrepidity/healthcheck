@@ -71,6 +71,7 @@ class PdoCheck implements CheckInterface
         $startTime = microtime(true);
 
         try {
+            /** @var \PDO $connection */
             $connection = call_user_func($this->connectionFactory);
             $connection->query("SELECT 1");
 
