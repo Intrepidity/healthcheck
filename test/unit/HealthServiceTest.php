@@ -24,21 +24,26 @@ class HealthServiceTest extends TestCase
 
     public function testPerformAllReturnsReport()
     {
-        $testMock = $this->prophesize(CheckInterface::class);
-        $testMock->performCheck()->willReturn(
-            $this->prophesize(CheckResult::class)->reveal()
-        );
-
-        $tests = [
-            $testMock->reveal(),
-            $testMock->reveal()
-        ];
-
-        $check = new HealthService($tests);
+        $check = new HealthService([
+            new NullCheck(),
+            new NullCheck()
+        ]);
 
         $report = $check->performAll();
 
         $this->assertInstanceOf(HealthReport::class, $report);
         $this->assertCount(2, $report->getCheckResults());
+    }
+}
+
+class NullCheck implements CheckInterface
+{
+    public function performCheck(): CheckResult
+    {
+        return new CheckResult(
+            "test",
+            true,
+            0.01
+        );
     }
 }

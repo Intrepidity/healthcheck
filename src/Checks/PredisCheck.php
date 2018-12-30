@@ -24,12 +24,7 @@ class PredisCheck implements CheckInterface
      */
     private $predisOptions;
 
-    /**
-     * @var callable
-     */
-    private $predisFactory;
-
-    public function __construct(string $label, array $predisParameters, array $predisOptions, callable $predisFactory = null)
+    public function __construct(string $label, array $predisParameters, array $predisOptions)
     {
         if (!class_exists('\Predis\Client')) {
             throw new CheckException("predis/predis is required for this check");
@@ -38,17 +33,6 @@ class PredisCheck implements CheckInterface
         $this->label = $label;
         $this->predisParameters = $predisParameters;
         $this->predisOptions = $predisOptions;
-
-        if ($predisFactory === null) {
-            $this->predisFactory = function() {
-                return new \Predis\Client(
-                    $this->predisParameters,
-                    $this->predisOptions
-                );
-            };
-        } else {
-            $this->predisFactory = $predisFactory;
-        }
     }
 
     public function performCheck(): CheckResult
@@ -56,8 +40,10 @@ class PredisCheck implements CheckInterface
         $startTime = microtime(true);
 
         try {
-            /** @var \Predis\Client $connection */
-            $connection = call_user_func($this->predisFactory);
+            $connection = new \Predis\Client(
+                $this->predisParameters,
+                $this->predisOptions
+            );
             $connection->connect();
 
             return new CheckResult(
