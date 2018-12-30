@@ -21,12 +21,14 @@ class HealthService implements HealthServiceInterface
      */
     public function __construct(array $checks = null, LoggerInterface $logger = null)
     {
-        foreach ($checks as $check)
-        {
-            $this->addCheck($check);
-        }
-
+        $this->checks = [];
         $this->logger = $logger ?? new NullLogger();
+
+        if ($checks) {
+            foreach ($checks as $check) {
+                $this->addCheck($check);
+            }
+        }
     }
 
     /**

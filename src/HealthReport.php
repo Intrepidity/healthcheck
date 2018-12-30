@@ -17,7 +17,9 @@ class HealthReport implements JsonSerializable
      */
     public function __construct(array $checkResults)
     {
-        array_walk($checkResults, function(CheckResult $result) {
+        $this->checkResults = [];
+
+        array_walk($checkResults, function(CheckResult $result): void {
             $this->checkResults[] = $result;
         });
     }
